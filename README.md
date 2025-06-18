@@ -1,10 +1,10 @@
-# **Tự động đếm bên PNV**
+# **tự động đếm bên PNV**
 
 ```bash
 python main.py
 ```
 
-** chỉnh `config.json` với token Discord của bạn:**
+**chỉnh `config.json` với token Discord của bạn:**
 
 ```json
 {
@@ -14,12 +14,8 @@ python main.py
 
 ---
 
-# 🔑 **Hướng dẫn lấy Token Discord (User Token)**
-
-⚠ **Lưu ý**: Token tài khoản **cá nhân** — dùng **selfbot** **có nguy cơ bị khóa tài khoản**. Tự chịu trách nhiệm!
-
+# 🔑 **hướng dẫn lấy Token Discord**
 ## 📱 **lấy token**
-
 1. **Mở Discord trên trình duyệt (Chrome, Cốc Cốc, Edge...)**
 2. **Nhấn `F12` → Chuyển sang tab `Network`**
 3. **Nhấn `CTRL + R` để tải lại trang**
