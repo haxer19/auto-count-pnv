@@ -16,14 +16,86 @@ python main.py
 
 # 🔑 **hướng dẫn lấy Token Discord**
 ## 📱 **lấy token**
-1. **Mở Discord trên trình duyệt (Chrome, Cốc Cốc, Edge...)**
-2. **Nhấn `F12` → Chuyển sang tab `Network`**
-3. **Nhấn `CTRL + R` để tải lại trang**
-4. Tìm **request** có tên **`science` hoặc bất kỳ request nào → Click**
-5. Chuyển sang tab **Headers** → Kéo xuống **Request Headers**
-6. **Tìm dòng:**
-```
-authorization: token_here
+> ctrl+shift+i của link: https://discord.com/channels/@me và dán vào console đoạn script:
+```javascript
+function getToken() {
+    let popup = window.open('', '', `top=50,left=${screen.width-300},width=300,height=150`);
+    if (!popup || !popup.document || !popup.document.write) return alert('Popup blocked! Allow popups and rerun.');
+    
+    window.dispatchEvent(new Event('beforeunload'));
+    let token = popup.localStorage.token.slice(1, -1);
+
+    popup.document.write(`
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                    margin: 20px;
+                    background: #f5f5f5;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                }
+                #token_p {
+                    background: #fff;
+                    padding: 8px;
+                    border-radius: 5px;
+                    font-family: monospace;
+                    width: 100%;
+                    text-align: center;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                button {
+                    padding: 6px 12px;
+                    border: none;
+                    border-radius: 5px;
+                    background: #5865F2;
+                    color: white;
+                    cursor: pointer;
+                }
+                button:hover {
+                    background: #4752C4;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="token_p"></div>
+            <div>
+                <button id="button_1">Show</button>
+                <button id="copy">Copy</button>
+            </div>
+        </body>
+        </html>
+    `);
+
+    let token_p = popup.document.getElementById('token_p');
+    token_p.innerHTML = '*'.repeat(token.length);
+
+    let btn = popup.document.getElementById('button_1');
+    btn.addEventListener('click', () => {
+        if (btn.innerHTML === 'Hide') {
+            btn.innerHTML = 'Show';
+            token_p.innerHTML = '*'.repeat(token.length);
+        } else {
+            btn.innerHTML = 'Hide';
+            token_p.innerHTML = token;
+        }
+    });
+
+    let copyButton = popup.document.getElementById('copy');
+    copyButton.addEventListener('click', () => {
+        let dummy = popup.document.createElement('textarea');
+        popup.document.body.appendChild(dummy);
+        dummy.value = token;
+        dummy.select();
+        popup.document.execCommand('copy');
+        popup.document.body.removeChild(dummy);
+    });
+}
+getToken();
 ```
 
 ---
