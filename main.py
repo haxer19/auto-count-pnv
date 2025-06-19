@@ -112,7 +112,7 @@ async def start(ctx, guild_id: int, channel_id: int):
                     continue
 
                 next_number=last_number+1
-                #await channel.send(f"{next_number} → tớ là Kiz, hành trình đi tới đầu bảng (chat {next_number+1} đi)")
+                #await channel.send(f"{next_number} → tớ là Kiz, hành trình đi tới đầu bảng (chat {conv(next_number +1)} đi)")
                 #await channel.send(f"{next_number} → chat {conv(next_number +1)} đi bạn ở dưới 👇")
                 await channel.send(str(next_number))
                 print(f"[{guild_id} | {channel_id}] 🔖 Đã gửi số: {next_number}")
