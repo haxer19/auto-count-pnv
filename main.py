@@ -43,6 +43,19 @@ async def refresh_console():
 async def on_ready():
     user = TienThanh.user
     guild_count = len(TienThanh.guilds)
+    menu = f"""
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}╔═══════════════════════╗
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}║       {Fore.LIGHTGREEN_EX}MENU USER{Fore.LIGHTCYAN_EX}       ║
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}╚═══════════════════════╝
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Tên người dùng [ {Style.RESET_ALL}@{user.name}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> ID [ {Style.RESET_ALL}{user.id}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Thời gian tạo tài khoản [ {Style.RESET_ALL}{user.created_at.strftime('%d/%m/%Y | %H:%M:%S')}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Prefix [ {Style.RESET_ALL}{_prefix_}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Có [ {Style.RESET_ALL}{guild_count}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] máy chủ
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
+"""
+    print(menu)
+    await asyncio.sleep(300)
     asyncio.create_task(refresh_console()) 
 
 @TienThanh.event
