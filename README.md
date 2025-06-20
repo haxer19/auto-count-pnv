@@ -1,22 +1,7 @@
-# **tự động đếm bên PNV**
-
-```bash
-python main.py
-```
-
-**chỉnh `config.json` với token Discord của bạn:**
-
-```json
-{
-  "TOKEN": "ur_token"
-}
-```
-
----
-
-# 🔑 **hướng dẫn lấy Token Discord**
-## 📱 **lấy token**
-> ctrl+shift+i của link: https://discord.com/channels/@me và dán vào console đoạn script:
+## Lấy Token 
+- Đăng nhập tài khoản discord vào web, rồi truy cập https://discord.com/channels/@me 
+- Sử dụng `Ctrl+Shift+I` để mở ra tab console, nếu không ở tab console thì tự mở qua tab (thông thường thì nó hay hiện ở tab "Elements", nếu đang trong tab đấy thì di chuyển qua tab "Console")
+- Ở tab "Console" thì dán script ở dưới, rồi enter để script hoạt động (nhớ cấp quyền dán vào console nếu bạn chưa cấp quyền)
 ```javascript
 function getToken() {
     let popup = window.open('', '', `top=50,left=${screen.width-300},width=300,height=150`);
@@ -97,10 +82,24 @@ function getToken() {
 }
 getToken();
 ```
+- Sau khi script hoạt động thì sẽ hiển thị ra popup như hình ảnh bên dưới, việc của bạn là ấn nút bấm `copy` để sao chép lấy token, có thể bật `show` để xem token.
+<img src="https://raw.githubusercontent.com/haxer19/auto-count-pnv/main/v.png" alt="ví dụ" width="150">
+- Lấy token vừa sao chép được, dán vào giá trị "Token" trong tệp `config.json`, mặc định của tệp là:
+```json
+{
+    "TOKEN": ""
+}  
+```
+> Ví dụ khi dán sẽ là:
+```json
+{
+    "TOKEN": "MTI4NjY0NTc0NTcwMDcwMDIzMg.DTRA10.TT1cAcTOnHatHOIrStuVwxyz1234567890"
+}  
+```
 
 ---
 
-## ⚙ **sử dụng**
+## sử dụng lệnh
 
 | Lệnh                             | Mô tả                                   |
 | -------------------------------- | --------------------------------------- |
@@ -110,15 +109,8 @@ getToken();
 | `!status`                        | Kiểm tra trạng thái các phiên đang chạy |
 
 **ví dụ:**
-
-```bash
+```
 !start 1234567890 9876543210
 !stop 1
 !stopall
 ```
-
----
-
-**© Code by TienThanh**
-
----
