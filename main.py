@@ -23,6 +23,7 @@ async def refresh_console():
         user = TienThanh.user
         guild_count = len(TienThanh.guilds)
         total_running = sum(1 for sess in acs.values() if sess['running'])
+        total_done = sum(sess.get('count', 0) for sess in acs.values())
 
         menu = f"""
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}╔═══════════════════════╗
@@ -33,11 +34,12 @@ async def refresh_console():
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Thời gian tạo tài khoản [ {Style.RESET_ALL}{user.created_at.strftime('%d/%m/%Y | %H:%M:%S')}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Prefix [ {Style.RESET_ALL}{_prefix_}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Có [ {Style.RESET_ALL}{guild_count}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] máy chủ
-{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đã làm [ {Style.RESET_ALL}{total_running}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đang chạy [ {Style.RESET_ALL}{total_running}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đã làm [ {Style.RESET_ALL}{total_done}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
 """
         print(menu)
-        await asyncio.sleep(300)
+        await asyncio.sleep(10)
 
 @TienThanh.event
 async def on_ready():
@@ -55,8 +57,6 @@ async def on_ready():
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
 """
     print(menu)
-    await asyncio.sleep(300)
-    asyncio.create_task(refresh_console()) 
 
 @TienThanh.event
 async def on_command_error(ctx, error):
@@ -121,8 +121,9 @@ async def start(ctx, guild_id: int, channel_id: int):
         await ctx.send(f"⚠ Không tìm thấy kênh text với ID **{channel_id}** trong server **{guild_id}**")
         return
 
-    session = {"running": True, "task": None}
+    session = {"running": True, "task": None, "count": 0}
     acs[key] = session
+    asyncio.create_task(refresh_console()) 
     #await ctx.send(f"⚔️ Bắt đầu tự động nối số ở server {guild_id} | kênh <#{channel_id}>")
     await ctx.send(f"⚔️ <#{channel_id}>")
     async def count_loop():
@@ -147,6 +148,7 @@ async def start(ctx, guild_id: int, channel_id: int):
                 #await channel.send(f"{next_number} → chat {conv(next_number +1)} đi bạn ở dưới 👇")
                 await channel.send(str(next_number))
                 print(f"-> {Fore.LIGHTGREEN_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] 🔖 Đã gửi số: {Style.RESET_ALL}{next_number}")
+                session['count']+=1
                 await asyncio.sleep(30)
             except Exception as e:
                 print(f"-> {Fore.LIGHTRED_EX}{Style.BRIGHT}Lỗi trong count_loop [{guild_id} | {channel_id}]: {Fore.LIGHTYELLOW_EX}{e}")
