@@ -1,10 +1,7 @@
 import os
 os.system("pip install discord.py==1.7.3")
 os.system("pip install colorama")
-if os.name == 'nt': 
-    os.system('cls')
-else:  
-    os.system('clear')
+os.system('cls' if os.name == 'nt' else 'clear')
  
 import json,discord,re,asyncio
 from colorama import Fore,Style,init
@@ -18,11 +15,16 @@ TienThanh.remove_command("help")
 
 running = True
 
-@TienThanh.event
-async def on_ready():
-    user = TienThanh.user
-    guild_count = len(TienThanh.guilds)
-    menu = f"""
+
+async def refresh_console():
+    await TienThanh.wait_until_ready()
+    while not TienThanh.is_closed():
+        os.system('cls' if os.name == 'nt' else 'clear')
+        user = TienThanh.user
+        guild_count = len(TienThanh.guilds)
+        total_running = sum(1 for sess in acs.values() if sess['running'])
+
+        menu = f"""
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}╔═══════════════════════╗
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}║       {Fore.LIGHTGREEN_EX}MENU USER{Fore.LIGHTCYAN_EX}       ║
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}╚═══════════════════════╝
@@ -31,9 +33,17 @@ async def on_ready():
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Thời gian tạo tài khoản [ {Style.RESET_ALL}{user.created_at.strftime('%d/%m/%Y | %H:%M:%S')}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Prefix [ {Style.RESET_ALL}{_prefix_}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Có [ {Style.RESET_ALL}{guild_count}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] máy chủ
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đã làm [ {Style.RESET_ALL}{total_running}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
 """
-    print(menu)
+        print(menu)
+        await asyncio.sleep(300)
+
+@TienThanh.event
+async def on_ready():
+    user = TienThanh.user
+    guild_count = len(TienThanh.guilds)
+    asyncio.create_task(refresh_console()) 
 
 @TienThanh.event
 async def on_command_error(ctx, error):
