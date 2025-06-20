@@ -1,21 +1,16 @@
 import os
 os.system("pip install discord.py==1.7.3")
 os.system("pip install colorama")
-os.system(
-    "sleep 2 && clear >/dev/null 2>&1 &"
-    if os.name == "posix"
-    else "timeout /t 2 >nul 2>&1 && cls"
-)
 if os.name == 'nt': 
     os.system('cls')
 else:  
     os.system('clear')
-
-import json
-from colorama import Fore, Style, init
-import discord
+ 
+import json,discord,re,asyncio
+from colorama import Fore,Style,init
 from discord.ext import commands
-import re,asyncio,random
+
+init(autoreset=True)
 
 _prefix_="!"
 TienThanh = commands.Bot(command_prefix=_prefix_, case_insensitive=True, self_bot=True, intents=discord.Intents.all())
@@ -23,21 +18,29 @@ TienThanh.remove_command("help")
 
 running = True
 
-print(f"""{Fore.BLUE}
-
- █████╗ ██╗   ██╗████████╗ ██████╗      ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗
-██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗    ██╔════╝██╔═══██╗██║   ██║████╗  ██║╚══██╔══╝
-███████║██║   ██║   ██║   ██║   ██║    ██║     ██║   ██║██║   ██║██╔██╗ ██║   ██║   
-██╔══██║██║   ██║   ██║   ██║   ██║    ██║     ██║   ██║██║   ██║██║╚██╗██║   ██║   
-██║  ██║╚██████╔╝   ██║   ╚██████╔╝    ╚██████╗╚██████╔╝╚██████╔╝██║ ╚████║   ██║   
-╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝      ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝                                                                                                                                                        
-{Style.RESET_ALL}""")
-
-init(autoreset=True)
-
 @TienThanh.event
 async def on_ready():
-    print(f"{Fore.LIGHTRED_EX} >Username:{Style.RESET_ALL}",f"{Fore.LIGHTGREEN_EX}{TienThanh.user}{Style.BRIGHT}{Style.RESET_ALL}\n")
+    user = TienThanh.user
+    guild_count = len(TienThanh.guilds)
+    menu = f"""
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}╔═══════════════════════╗
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}║       {Fore.LIGHTGREEN_EX}MENU USER{Fore.LIGHTCYAN_EX}       ║
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}╚═══════════════════════╝
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Tên người dùng [ {Style.RESET_ALL}@{user.name}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> ID [ {Style.RESET_ALL}{user.id}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Thời gian tạo tài khoản [ {Style.RESET_ALL}{user.created_at.strftime('%d/%m/%Y | %H:%M:%S')}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Prefix [ {Style.RESET_ALL}{_prefix_}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Có [ {Style.RESET_ALL}{guild_count}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] máy chủ
+{Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
+"""
+    print(menu)
+
+@TienThanh.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(f"⚠ Lệnh không tồn tại. Gõ {_prefix_}help để xem danh sách lệnh.")
+    else:
+        raise error
 
 def conv(number: int) -> str:
     bold_digits = {
@@ -49,20 +52,22 @@ def conv(number: int) -> str:
 @TienThanh.command()
 async def help(ctx):
     _help = f"""
-**Auto Count** (Author: TienThanh)
+*Thông tin và cách sử dụng*
 
-**Prefix:** `{_prefix_}`
+**Prefix:** {_prefix_}
 
 **Lệnh:**
-- `{_prefix_}start <guild_id> <channel_id>` → Bắt đầu tự động nối số
-- `{_prefix_}stop <số thứ tự>` → Dừng nhiệm vụ theo số thứ tự (xem số thứ tự bằng `status`)
-- `{_prefix_}stopall` → Dừng toàn bộ nhiệm vụ
-- `{_prefix_}status` → Xem trạng thái nhiệm vụ
+- {_prefix_}start <guild_id> <channel_id> → Bắt đầu tự động nối số
+- {_prefix_}stop <số thứ tự>` → Dừng nhiệm vụ theo số thứ tự (xem số thứ tự bằng `status`)
+- {_prefix_}stopall → Dừng toàn bộ nhiệm vụ
+- {_prefix_}status → Xem trạng thái nhiệm vụ
 
 **Ví dụ sử dụng:**
-- `{_prefix_}start 1234567890 9876543210`
-- `{_prefix_}stop 1`
-- `{_prefix_}stopall`
+- {_prefix_}start 1234567890 9876543210
+- {_prefix_}stop 1
+- {_prefix_}stopall
+
+### Được làm bởi TienThanh
 """
     await ctx.send(_help)
 
@@ -78,17 +83,17 @@ async def start(ctx, guild_id: int, channel_id: int):
     key = (guild_id, channel_id)
 
     if key in acs and acs[key]['running']:
-        await ctx.send(f"⚠ Đã có một phiên đếm đang chạy cho server {guild_id} | kênh {channel_id}")
+        await ctx.send(f"⚠ Đã có một phiên đếm cho <#{channel_id}>")
         return
 
     guild = discord.utils.get(TienThanh.guilds, id=guild_id)
     if not guild:
-        await ctx.send(f"⚠ Không tìm thấy server với ID {guild_id}")
+        await ctx.send(f"⚠ Không tìm thấy server với ID **{guild_id}**")
         return
 
     channel = discord.utils.get(guild.channels, id=channel_id)
     if not isinstance(channel, discord.TextChannel):
-        await ctx.send(f"⚠ Không tìm thấy kênh text với ID {channel_id} trong server {guild_id}")
+        await ctx.send(f"⚠ Không tìm thấy kênh text với ID **{channel_id}** trong server **{guild_id}**")
         return
 
     session = {"running": True, "task": None}
@@ -108,7 +113,7 @@ async def start(ctx, guild_id: int, channel_id: int):
                         break
 
                 if last_number == 0:
-                    print(f"[{guild_id} | {channel_id}] ⚠ Không tìm thấy số nào từ người khác.")
+                    print(f"-> {Fore.LIGHTYELLOW_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] ⚠ Không tìm thấy số nào từ người khác.")
                     await asyncio.sleep(5)
                     continue
 
@@ -116,10 +121,10 @@ async def start(ctx, guild_id: int, channel_id: int):
                 #await channel.send(f"{next_number} → tớ là Kiz, hành trình đi tới đầu bảng (chat {conv(next_number +1)} đi)")
                 #await channel.send(f"{next_number} → chat {conv(next_number +1)} đi bạn ở dưới 👇")
                 await channel.send(str(next_number))
-                print(f"[{guild_id} | {channel_id}] 🔖 Đã gửi số: {next_number}")
+                print(f"-> {Fore.LIGHTGREEN_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] 🔖 Đã gửi số: {Style.RESET_ALL}{next_number}")
                 await asyncio.sleep(30)
             except Exception as e:
-                print(f"❗ Lỗi trong count_loop [{guild_id} | {channel_id}]: {e}")
+                print(f"-> {Fore.LIGHTRED_EX}{Style.BRIGHT}Lỗi trong count_loop [{guild_id} | {channel_id}]: {Fore.LIGHTYELLOW_EX}{e}")
                 await asyncio.sleep(5)
 
     session["task"] = asyncio.create_task(count_loop())
@@ -127,14 +132,14 @@ async def start(ctx, guild_id: int, channel_id: int):
 @TienThanh.command()
 async def status(ctx):
     if not acs:
-        await ctx.send("⚠ Không có phiên auto count nào đang chạy.")
+        await ctx.send("⚠ Không có phiên nào đang chạy.")
         return
 
-    status_msg = "**📊 Các phiên auto count đang hoạt động:**\n"
+    status_msg = "**📊 Các phiên đang hoạt động:**\n"
     for idx, ((guild_id, channel_id), sess) in enumerate(acs.items(), start=1):
         state = "🟢 Đang chạy" if sess["running"] else "🔴 Đã dừng"
         #status_msg += f"`{idx}` → **Guild:** `{guild_id}` | **Channel:** `{channel_id}` → {state}\n"
-        status_msg += f"`{idx}` → **Nhiệm Vụ:** `<#{channel_id}>` → {state}\n"
+        status_msg += f"## {idx} → **Nhiệm Vụ:** `<#{channel_id}>` → {state}\n"
 
     await ctx.send(status_msg)
 
@@ -150,7 +155,7 @@ async def stop(ctx, index: int):
         key, sess = items[index - 1]
         sess["running"] = False
         #await ctx.send(f"🛑 Đã dừng phiên `{index}` → Server `{key[0]}` | Kênh `{key[1]}`")
-        await ctx.send(f"🛑 Đã dừng `{index}` → **Nhiệm Vụ:** `<#{key[1]}>`")
+        await ctx.send(f"🛑 Đã dừng **{index}** → **Nhiệm Vụ:** `<#{key[1]}>`")
     else:
         await ctx.send("⚠ Số thứ tự không hợp lệ.")
 
@@ -161,7 +166,7 @@ async def stopall(ctx):
         if sess["running"]:
             sess["running"] = False
             count += 1
-    await ctx.send(f"🛑 Đã dừng toàn bộ `{count}` phiên auto count đang chạy.")
+    await ctx.send(f"🛑 Đã dừng toàn bộ **{count}** phiên auto count đang chạy.")
 
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
