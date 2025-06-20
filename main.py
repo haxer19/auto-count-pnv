@@ -61,11 +61,13 @@ async def help(ctx):
 - {_prefix_}stop <số thứ tự>` → Dừng nhiệm vụ theo số thứ tự (xem số thứ tự bằng `status`)
 - {_prefix_}stopall → Dừng toàn bộ nhiệm vụ
 - {_prefix_}status → Xem trạng thái nhiệm vụ
+- {_prefix_}play → Đặt trạng thái đang chơi
 
 **Ví dụ sử dụng:**
 - {_prefix_}start 1234567890 9876543210
 - {_prefix_}stop 1
 - {_prefix_}stopall
+- {_prefix_}play kiz đẹp trai
 
 ### Được làm bởi TienThanh
 """
@@ -168,6 +170,14 @@ async def stopall(ctx):
             count += 1
     await ctx.send(f"🛑 Đã dừng toàn bộ **{count}** phiên auto count đang chạy.")
 
+@TienThanh.command()
+async def play(ctx, *, game_name: str = None):
+    if not game_name:
+        await ctx.send(f"⚠ Vui lòng nhập nội dung. Ví dụ: `{_prefix_}play kiz đẹp trai")
+        return
+    await TienThanh.change_presence(activity=discord.Game(name=game_name))
+    await ctx.send(f"Đã set trạng thái **{game_name}**")
+    
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
 
