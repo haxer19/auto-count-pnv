@@ -35,11 +35,11 @@ async def refresh_console():
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Prefix [ {Style.RESET_ALL}{_prefix_}{Fore.LIGHTRED_EX}{Style.BRIGHT} ]
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Có [ {Style.RESET_ALL}{guild_count}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] máy chủ
 {Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đang chạy [ {Style.RESET_ALL}{total_running}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
-{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đã làm [ {Style.RESET_ALL}{total_done+1}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
+{Fore.LIGHTRED_EX}{Style.BRIGHT}>> Đã làm [ {Style.RESET_ALL}{total_done}{Fore.LIGHTRED_EX}{Style.BRIGHT} ] nhiệm vụ
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
 """
         print(menu)
-        await asyncio.sleep(10)
+        await asyncio.sleep(30)
 
 @TienThanh.event
 async def on_ready():
