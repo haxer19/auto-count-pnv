@@ -13,7 +13,7 @@ function getToken() {
     popup.document.write(`
         <style>
             body { margin: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e1e2f, #2a2a4a); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-            .popup { width: 360px; padding: 24px; background: rgba(255, 255, 255, 0.95); border-radius: 16px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transform: scale(0.8); opacity: 0; animation: popupFadeIn 0.3s ease-out forwards; }
+            .popup { width: 300px; padding: 24px; background: rgba(255, 255, 255, 0.95); border-radius: 16px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transform: scale(0.8); opacity: 0; animation: popupFadeIn 0.3s ease-out forwards; }
             @keyframes popupFadeIn { to { transform: scale(1); opacity: 1; } }
             .token-container { background: #f0f0f5; padding: 12px; border-radius: 8px; font-family: 'Courier New', monospace; text-align: center; word-break: break-all; transition: all 0.3s ease; font-weight: bold; color: cyan; }
             .token-container:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
