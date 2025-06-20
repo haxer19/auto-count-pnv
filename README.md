@@ -85,12 +85,14 @@ getToken();
 - Sau khi script hoạt động thì sẽ hiển thị ra popup như hình ảnh bên dưới, việc của bạn là ấn nút bấm `copy` để sao chép lấy token, có thể bật `show` để xem token.
 <img src="https://raw.githubusercontent.com/haxer19/auto-count-pnv/main/v.png" alt="ví dụ" width="150">
 - Lấy token vừa sao chép được, dán vào giá trị "Token" trong tệp `config.json`, mặc định của tệp là:
+  
 ```json
 {
     "TOKEN": ""
 }  
 ```
-> Ví dụ khi dán sẽ là:
+**Ví dụ khi dán sẽ là:**
+
 ```json
 {
     "TOKEN": "MTI4NjY0NTc0NTcwMDcwMDIzMg.DTRA10.TT1cAcTOnHatHOIrStuVwxyz1234567890"
