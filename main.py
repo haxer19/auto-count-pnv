@@ -39,6 +39,7 @@ async def refresh_console():
 {Fore.LIGHTCYAN_EX}{Style.BRIGHT}═════════════════════════
 """
         print(menu)
+        await asyncio.sleep(30)
 
 @TienThanh.event
 async def on_ready():
@@ -123,6 +124,7 @@ async def start(ctx, guild_id: int, channel_id: int):
     session = {"running": True, "task": None, "count": 0}
     acs[key] = session
     #await ctx.send(f"⚔️ Bắt đầu tự động nối số ở server {guild_id} | kênh <#{channel_id}>")
+    asyncio.create_task(refresh_console()) 
     await ctx.send(f"⚔️ <#{channel_id}>")
     async def count_loop():
         while session["running"]:
@@ -147,7 +149,6 @@ async def start(ctx, guild_id: int, channel_id: int):
                 await channel.send(str(next_number))
                 print(f"-> {Fore.LIGHTGREEN_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] 🔖 Đã gửi số: {Style.RESET_ALL}{next_number}")
                 session['count']+=1
-                asyncio.create_task(refresh_console()) 
                 await asyncio.sleep(30)
             except Exception as e:
                 print(f"-> {Fore.LIGHTRED_EX}{Style.BRIGHT}Lỗi trong count_loop [{guild_id} | {channel_id}]: {Fore.LIGHTYELLOW_EX}{e}")
@@ -163,9 +164,9 @@ async def status(ctx):
 
     status_msg = "**📊 Các phiên đang hoạt động:**\n"
     for idx, ((guild_id, channel_id), sess) in enumerate(acs.items(), start=1):
-        state = "🟢 Đang chạy" if sess["running"] else "🔴 Đã dừng"
+        state = "🟢 hoạt động" if sess["running"] else "🔴 dừng"
         #status_msg += f"`{idx}` → **Guild:** `{guild_id}` | **Channel:** `{channel_id}` → {state}\n"
-        status_msg += f"## {idx} → **Nhiệm Vụ:** <#{channel_id}> → {state}\n"
+        status_msg += f"{idx} → **Nhiệm Vụ:** <#{channel_id}> → {state}\n"
 
     await ctx.send(status_msg)
 
