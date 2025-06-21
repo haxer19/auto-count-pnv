@@ -156,8 +156,6 @@ async def start(ctx, guild_id: int, channel_id: int):
                 print(f"-> {Fore.LIGHTGREEN_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] 🔖 Đã gửi số: {Style.RESET_ALL}{next_number}")
                 session['count']+=1
                 await asyncio.sleep(30)
-                os.system('cls' if os.name == 'nt' else 'clear')
-                asyncio.create_task(refresh_console()) 
             except Exception as e:
                 print(f"-> {Fore.LIGHTRED_EX}{Style.BRIGHT}Lỗi trong count_loop [{guild_id} | {channel_id}]: {Fore.LIGHTYELLOW_EX}{e}")
                 await asyncio.sleep(5)
