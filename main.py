@@ -166,7 +166,7 @@ async def status(ctx):
     for idx, ((guild_id, channel_id), sess) in enumerate(acs.items(), start=1):
         state = "🟢 Đang chạy" if sess["running"] else "🔴 Đã dừng"
         #status_msg += f"`{idx}` → **Guild:** `{guild_id}` | **Channel:** `{channel_id}` → {state}\n"
-        status_msg += f"## {idx} → **Nhiệm Vụ:** `<#{channel_id}>` → {state}\n"
+        status_msg += f"## {idx} → **Nhiệm Vụ:** <#{channel_id}> → {state}\n"
 
     await ctx.send(status_msg)
 
@@ -182,7 +182,7 @@ async def stop(ctx, index: int):
         key, sess = items[index - 1]
         sess["running"] = False
         #await ctx.send(f"🛑 Đã dừng phiên `{index}` → Server `{key[0]}` | Kênh `{key[1]}`")
-        await ctx.send(f"🛑 Đã dừng **{index}** → **Nhiệm Vụ:** `<#{key[1]}>`")
+        await ctx.send(f"🛑 Đã dừng **{index}** → **Nhiệm Vụ:** <#{key[1]}>")
     else:
         await ctx.send("⚠ Số thứ tự không hợp lệ.")
 
