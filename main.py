@@ -145,7 +145,7 @@ async def start(ctx, guild_id: int, channel_id: int):
                     continue
 
                 if last_author_id == TienThanh.user.id:
-                    print(f"-> {Fore.LIGHTYELLOW_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] ⏳ Đang chờ người khác nối tiếp sau số {last_number}...")
+                    print(f"-> {Fore.LIGHTYELLOW_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] ⏳ Đang chờ người khác nối tiếp sau số {Style.RESET_ALL}{last_number}")
                     await asyncio.sleep(10)
                     continue
 
