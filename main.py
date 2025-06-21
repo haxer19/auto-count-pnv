@@ -123,24 +123,30 @@ async def start(ctx, guild_id: int, channel_id: int):
 
     session = {"running": True, "task": None, "count": 0}
     acs[key] = session
-    #await ctx.send(f"⚔️ Bắt đầu tự động nối số ở server {guild_id} | kênh <#{channel_id}>")
     asyncio.create_task(refresh_console()) 
+    #await ctx.send(f"⚔️ Bắt đầu tự động nối số ở server {guild_id} | kênh <#{channel_id}>")
     await ctx.send(f"⚔️ <#{channel_id}>")
     async def count_loop():
+        last_sent_number = 0
+        last_author_id = None
         while session["running"]:
             try:
                 last_number = 0
                 async for msg in channel.history(limit=100):
-                    if msg.author.id == TienThanh.user.id:
-                        continue
                     number = e_num(msg.content)
                     if number:
                         last_number = number
+                        last_author_id = msg.author.id
                         break
 
                 if last_number == 0:
                     print(f"-> {Fore.LIGHTYELLOW_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] ⚠ Không tìm thấy số nào từ người khác.")
                     await asyncio.sleep(5)
+                    continue
+
+                if last_author_id == TienThanh.user.id:
+                    print(f"-> {Fore.LIGHTYELLOW_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] ⏳ Đang chờ người khác nối tiếp sau số {last_number}...")
+                    await asyncio.sleep(10)
                     continue
 
                 next_number=last_number+1
@@ -150,6 +156,8 @@ async def start(ctx, guild_id: int, channel_id: int):
                 print(f"-> {Fore.LIGHTGREEN_EX}{Style.BRIGHT}[{guild_id} | {channel_id}] 🔖 Đã gửi số: {Style.RESET_ALL}{next_number}")
                 session['count']+=1
                 await asyncio.sleep(30)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                asyncio.create_task(refresh_console()) 
             except Exception as e:
                 print(f"-> {Fore.LIGHTRED_EX}{Style.BRIGHT}Lỗi trong count_loop [{guild_id} | {channel_id}]: {Fore.LIGHTYELLOW_EX}{e}")
                 await asyncio.sleep(5)
